@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:title="Início"
+        android:icon="@drawable/home" />
+    <item
+        android:id="@+id/navigation_post"
+        android:title="Publicação"
+        android:icon="@drawable/plus_circle" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:title="Perfil"
+        android:icon="@drawable/profile" />
+</menu>

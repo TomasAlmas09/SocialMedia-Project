@@ -2,70 +2,47 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@drawable/moldura"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="40dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
 
-    <EditText
+    <TextView
         android:id="@+id/edit_idcar_itempost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="idcarro"
-        android:textAlignment="center"
+        android:hint="Título"
+        android:layout_marginLeft="15dp"
+        android:textStyle="bold"
         android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></EditText>
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
     <ImageView
         android:id="@+id/img_foto_itempost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:minWidth="200dp"
-        android:minHeight="200dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_idcar_itempost"></ImageView>
 
-    <EditText
+    <TextView
         android:id="@+id/edit_modelo_itempost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:hint="modelo"
-        android:textAlignment="center"
-        android:textSize="22dp"
+        android:hint="Descrição"
+        android:layout_marginLeft="15dp"
+        android:textSize="17dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_foto_itempost">
 
-    </EditText>
-
-    <TableLayout
-        android:layout_marginTop="33dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_modelo_itempost"
-        app:layout_constraintStart_toStartOf="parent">
-        <TableRow>
-            <Button
-                android:id="@+id/bt_delete_itempost"
-                android:text="Delete"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/black"
-                ></Button>
-            <Button
-                android:id="@+id/bt_update_itempost"
-                android:text="Update"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/black"
-                ></Button>
-        </TableRow>
-    </TableLayout>
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

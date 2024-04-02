@@ -32,8 +32,8 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        EditText editId;
-        EditText editModelo;
+        TextView editId;
+        TextView editModelo;
         ImageView imgFoto;
         Button btnDelete;
         Button btnUpdate;
@@ -43,10 +43,11 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             editId = itemView.findViewById(R.id.edit_idcar_itempost);
             editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
             imgFoto = itemView.findViewById(R.id.img_foto_itempost);
-            btnDelete = itemView.findViewById(R.id.bt_delete_itempost);
-            btnUpdate = itemView.findViewById(R.id.bt_update_itempost);
+
         }
     }
+
+
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
