@@ -1,6 +1,7 @@
 package com.example.socialmedia;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
+    private static final String TAG = "RecyclePost"; // Tag for logging
 
     private Context context;
     private List<Post> posts;
@@ -45,6 +47,7 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             btnUpdate = itemView.findViewById(R.id.bt_update_itempost);
         }
     }
+
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
@@ -61,15 +64,18 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
         Post post = posts.get(position);
         holder.editId.setText(String.valueOf(post.getTitle()));
         holder.editModelo.setText(post.getModelo());
+
         if (post.getFoto() != null && post.getFoto().length > 0) {
             holder.imgFoto.setImageBitmap(Post.arrayToBitmap(post.getFoto()));
         } else {
             // Clear the image if there is no photo for this post
             holder.imgFoto.setImageBitmap(null);
         }
+
         holder.imgFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Image clicked at position: " + position);
                 if (listener != null) {
                     int adapterPosition = holder.getAdapterPosition();
                     if (adapterPosition != RecyclerView.NO_POSITION) {
@@ -79,7 +85,6 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             }
         });
     }
-
 
     @Override
     public int getItemCount() {

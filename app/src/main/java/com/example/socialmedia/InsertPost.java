@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ public class InsertPost extends AppCompatActivity {
     Button btinsert, btcancel;
     ImageView imgfoto;
 
+    private static final String TAG = "InsertPost";
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -30,8 +33,10 @@ public class InsertPost extends AppCompatActivity {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imgfoto.setImageBitmap(bmp);
+                Log.d(TAG, "Image set successfully from onActivityResult.");
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.e(TAG, "Error setting image from onActivityResult: " + e.getMessage());
             }
         }
     }
@@ -49,6 +54,7 @@ public class InsertPost extends AppCompatActivity {
                 Intent itfoto = new Intent(Intent.ACTION_GET_CONTENT);
                 itfoto.setType("image/*");
                 startActivityForResult(itfoto, CANALFOTO);
+                Log.d(TAG, "Started activity for image selection.");
             }
         });
 
@@ -65,6 +71,7 @@ public class InsertPost extends AppCompatActivity {
                 myBD.insertPost(novo, bmp);
                 App.loadList();
                 finish();
+                Log.d(TAG, "Inserted new post and finished activity.");
             }
         });
 
@@ -73,6 +80,7 @@ public class InsertPost extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                Log.d(TAG, "Cancelled post insertion and finished activity.");
             }
         });
     }

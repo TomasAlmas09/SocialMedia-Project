@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.graphics.BitmapFactory;
 
 import androidx.annotation.Nullable;
 
@@ -22,7 +21,7 @@ public class MyBD extends SQLiteOpenHelper {
     public static final String DESCRIPTION = "description";
     public static final String FOTO = "foto";
 
-    private static final String TAG = "Xpto";
+    private static final String TAG = "MyBD";
 
     public MyBD(@Nullable Context context, int version) {
         super(context, DATABASENAME, null, version);
@@ -36,12 +35,14 @@ public class MyBD extends SQLiteOpenHelper {
                 FOTO + " BLOB " +
                 ")";
         db.execSQL(sql);
+        Log.d(TAG, "Database table created.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TB_POST);
         onCreate(db);
+        Log.d(TAG, "Database table upgraded.");
     }
 
     public long insertPost(Post novo, Bitmap bmp) {
@@ -55,6 +56,7 @@ public class MyBD extends SQLiteOpenHelper {
             cv.put(FOTO, Post.bitmapToArray(bmp));
             resp = db.insert(TB_POST, null, cv);
             db.setTransactionSuccessful();
+            Log.d(TAG, "Inserted new post into database.");
         } catch (SQLException e) {
             Log.e(TAG, "Error inserting data into database: " + e.getMessage());
         } finally {
@@ -64,24 +66,23 @@ public class MyBD extends SQLiteOpenHelper {
         return resp;
     }
 
-
-    List<Post> carregaLista(){
+    public List<Post> carregaLista() {
         List<Post> lista = new ArrayList<>();
-        SQLiteDatabase db =getReadableDatabase();
-        String sql="select * from "+ TB_POST +" ;";
-        Cursor cur = db.rawQuery(sql,null);
-        if(cur.getCount()>0){
+        SQLiteDatabase db = getReadableDatabase();
+        String sql = "SELECT * FROM " + TB_POST;
+        Cursor cur = db.rawQuery(sql, null);
+        if (cur.getCount() > 0) {
             cur.moveToFirst();
-            do{
+            do {
                 Post c = new Post(
                         cur.getString(0),
                         cur.getString(1),
                         cur.getBlob(2)
                 );
                 lista.add(c);
-            }while (cur.moveToNext());
+            } while (cur.moveToNext());
+            Log.d(TAG, "Loaded post list from database.");
         }
-        return  lista;
+        return lista;
     }
-
 }

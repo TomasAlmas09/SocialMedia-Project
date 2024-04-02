@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 
 public class Post implements Parcelable {
     //region fields
+    private static final String TAG = "Post"; // Tag for logging
     private String title;
     private String modelo;
     private byte[] foto;
@@ -98,5 +100,12 @@ public class Post implements Parcelable {
 
     public static Bitmap arrayToBitmap(byte[] foto) {
         return BitmapFactory.decodeByteArray(foto, 0, foto.length);
+    }
+
+    // Log method for debugging
+    public void logPostInfo() {
+        Log.d(TAG, "Post title: " + title);
+        Log.d(TAG, "Post modelo: " + modelo);
+        Log.d(TAG, "Post foto length: " + (foto != null ? foto.length : 0));
     }
 }

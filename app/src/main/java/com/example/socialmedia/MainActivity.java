@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     public  int pos;
     public  static  final int CANALINSERT=2;
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent it = new Intent(MainActivity.this, InsertPost.class);
                 startActivityForResult(it,CANALINSERT);
+                Log.d(TAG, "Started activity for inserting new post.");
             }
         });
         recyclerView = findViewById(R.id.recycle_post_main);
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent it = new Intent(Intent.ACTION_GET_CONTENT);
                 it.setType("image/*");
                 startActivityForResult(it,CANAL_FOTO);
+                Log.d(TAG, "Started activity for selecting image.");
             }
         });
         recyclerView.setAdapter(adpt);
@@ -61,10 +66,8 @@ public class MainActivity extends AppCompatActivity {
             overridePendingTransition(0, 0);
             startActivity(getIntent());
             overridePendingTransition(0, 0);
-
+            Log.d(TAG, "Inserted new post and refreshed activity.");
         }
-
-
 
         if(requestCode==CANAL_FOTO && resultCode==RESULT_OK){
             Uri uri = Uri.parse(data.getData().toString());
@@ -72,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bmp= MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
                 App.stand.get(pos).setFoto(Post.bitmapToArray(bmp));
                 adpt.notifyDataSetChanged();
+                Log.d(TAG, "Selected image set to post and adapter notified.");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 }
