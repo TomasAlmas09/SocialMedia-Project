@@ -1,6 +1,5 @@
 package com.example.socialmedia;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,63 +16,73 @@ import java.util.List;
 
 public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
 
-    public Context ctx;
-    public List<Post> post;
-
+    private Context context;
+    private List<Post> posts;
     private IOnSacaFoto listener;
-    public  void setOnSacaFotoListener(IOnSacaFoto lst){
-        this.listener=lst;
+
+    public RecyclePost(Context context, List<Post> posts) {
+        this.context = context;
+        this.posts = posts;
     }
 
-    public RecyclePost(Context ctx, List<Post> post) {
-        this.ctx = ctx;
-        this.post = post;
+    public void setOnSacaFotoListener(IOnSacaFoto listener) {
+        this.listener = listener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        EditText editid,editmodelo;
-        Spinner spincat;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        EditText editId;
+        EditText editModelo;
+        ImageView imgFoto;
+        Button btnDelete;
+        Button btnUpdate;
 
-        ImageView imgfoto;
-
-        Button btdel, btupdate;
-        public ViewHolder(@NonNull View v) {
-            super(v);
-            editid=v.findViewById(R.id.edit_idcar_itemcarro);
-            editmodelo=v.findViewById(R.id.edit_modelo_itemcarro);
-            spincat=v.findViewById(R.id.spin_categoria_itemcarro);
-            imgfoto=v.findViewById(R.id.img_foto_itemcarro);
-            btdel=v.findViewById(R.id.bt_delete_itemcarro);
-            btupdate=v.findViewById(R.id.bt_update_itemcarro);
+        ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            editId = itemView.findViewById(R.id.edit_idcar_itempost);
+            editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
+            imgFoto = itemView.findViewById(R.id.img_foto_itempost);
+            btnDelete = itemView.findViewById(R.id.bt_delete_itempost);
+            btnUpdate = itemView.findViewById(R.id.bt_update_itempost);
         }
+    }
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @NonNull
     @Override
-    public RecyclePost.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(ctx).inflate(R.layout.itempost,parent,false);
-        return new RecyclePost.ViewHolder(v);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.itempost, parent, false);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclePost.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Post post = this.post.get(position);
-        holder.editid.setText(String.valueOf(post.getId()));
-        holder.editmodelo.setText(post.getModelo());
-        if(post.getFoto().length>0){
-            holder.imgfoto.setImageBitmap(Post.arraytobitmap(post.getFoto()));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Post post = posts.get(position);
+        holder.editId.setText(String.valueOf(post.getTitle()));
+        holder.editModelo.setText(post.getModelo());
+        if (post.getFoto() != null && post.getFoto().length > 0) {
+            holder.imgFoto.setImageBitmap(Post.arrayToBitmap(post.getFoto()));
+        } else {
+            // Clear the image if there is no photo for this post
+            holder.imgFoto.setImageBitmap(null);
         }
-        holder.imgfoto.setOnClickListener(new View.OnClickListener() {
+        holder.imgFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.SacaFoto(position);
+                if (listener != null) {
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        listener.SacaFoto(adapterPosition);
+                    }
+                }
             }
         });
-
     }
+
 
     @Override
     public int getItemCount() {
-        return post.size();
+        return posts.size();
     }
 }

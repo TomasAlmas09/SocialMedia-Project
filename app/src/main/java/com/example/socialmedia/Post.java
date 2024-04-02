@@ -2,7 +2,6 @@ package com.example.socialmedia;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,33 +10,25 @@ import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
 
 public class Post implements Parcelable {
-    //region campos
-    private  int id;
-    private String  modelo;
-    private  String categoria;
-
-    private  byte[] foto;
+    //region fields
+    private String title;
+    private String modelo;
+    private byte[] foto;
     // endregion
 
     //region Getters & Setters
 
     protected Post(Parcel in) {
-        id = in.readInt();
+        title = in.readString();
         modelo = in.readString();
-        categoria = in.readString();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            foto = in.readBlob();
-        }
+        foto = in.createByteArray();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(title);
         dest.writeString(modelo);
-        dest.writeString(categoria);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            dest.writeBlob(foto);
-        }
+        dest.writeByteArray(foto);
     }
 
     @Override
@@ -57,12 +48,12 @@ public class Post implements Parcelable {
         }
     };
 
-    public int getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getModelo() {
@@ -73,14 +64,6 @@ public class Post implements Parcelable {
         this.modelo = modelo;
     }
 
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
     public byte[] getFoto() {
         return foto;
     }
@@ -89,35 +72,31 @@ public class Post implements Parcelable {
         this.foto = foto;
     }
 
-    //endregion
-
-
     @NonNull
     @Override
     public String toString() {
-        return String.format("%d %s  %s", id,modelo,categoria);
+        return String.format("%s %s", title, modelo);
     }
 
-    public Post(int id, String modelo, String categoria, byte[] foto) {
-        this.id = id;
+    public Post(String title, String modelo, byte[] foto) {
+        this.title = title;
         this.modelo = modelo;
-        this.categoria = categoria;
         this.foto = foto;
     }
-    public Post(int id, String modelo, String categoria, Bitmap bmp) {
-        this.id = id;
+
+    public Post(String title, String modelo, Bitmap bmp) {
+        this.title = title;
         this.modelo = modelo;
-        this.categoria = categoria;
-        this.foto = bitmaptoarray(bmp);
+        this.foto = bitmapToArray(bmp);
     }
 
-    public  static byte[] bitmaptoarray(Bitmap bmp){
+    public static byte[] bitmapToArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG,100,stream);
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
-    public  static  Bitmap arraytobitmap(byte[] foto){
-        return BitmapFactory.decodeByteArray(foto,0,foto.length);
+    public static Bitmap arrayToBitmap(byte[] foto) {
+        return BitmapFactory.decodeByteArray(foto, 0, foto.length);
     }
 }

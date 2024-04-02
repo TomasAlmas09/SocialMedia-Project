@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     public  int pos;
     public  static  final int CANALINSERT=2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(it,CANALINSERT);
             }
         });
-        recyclerView = findViewById(R.id.recycle_carro_main);
+        recyclerView = findViewById(R.id.recycle_post_main);
         adpt = new RecyclePost(MainActivity.this, App.stand);
         adpt.setOnSacaFotoListener(new IOnSacaFoto() {
             @Override
@@ -62,11 +64,13 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
+
         if(requestCode==CANAL_FOTO && resultCode==RESULT_OK){
             Uri uri = Uri.parse(data.getData().toString());
             try {
                 Bitmap bmp= MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-                App.stand.get(pos).setFoto(Post.bitmaptoarray(bmp));
+                App.stand.get(pos).setFoto(Post.bitmapToArray(bmp));
                 adpt.notifyDataSetChanged();
             } catch (IOException e) {
                 throw new RuntimeException(e);
