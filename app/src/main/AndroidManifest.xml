@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".InsertPost" />
+        <activity android:name=".Login" />
+        <activity android:name=".Register" />
     </application>
 
 </manifest>

@@ -25,7 +25,7 @@ public class App extends Application {
 
     public static void loadList() {
         if (ctx != null) {
-            MyBD myBD = new MyBD(ctx, 1);
+            MyBD myBD = new MyBD(ctx,2);
             stand = myBD.carregaLista();
             Log.d(TAG, "List loaded successfully.");
         } else {

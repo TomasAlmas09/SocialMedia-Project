@@ -7,19 +7,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 
 public class InsertPost extends AppCompatActivity {
     private static final int CANALFOTO = 3;
-    EditText editTitle, editDesc; // Corrected EditText IDs
+    EditText editTitle, editDesc;
     Button btinsert, btcancel;
     ImageView imgfoto;
 
@@ -45,8 +49,33 @@ public class InsertPost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
-        editTitle = findViewById(R.id.edit_tittle_insert); // Corrected EditText IDs
-        editDesc = findViewById(R.id.edit_desc_insert); // Corrected EditText IDs
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.navigation_home) {
+                    Intent intent = new Intent(InsertPost.this, MainActivity.class);
+                    startActivity(intent);
+                    return true;
+
+                } else if (item.getItemId() == R.id.navigation_post) {
+                    Intent intent = new Intent(InsertPost.this, InsertPost.class);
+                    startActivity(intent);
+                    Log.d(TAG, "Started activity for inserting new post.");
+                    return true;
+                } else if (item.getItemId() == R.id.navigation_profile) {
+                    Intent intent = new Intent(InsertPost.this, Login.class);
+                    startActivity(intent);
+                    Log.d(TAG, "Started login activity.");
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        editTitle = findViewById(R.id.edit_tittle_insert);
+        editDesc = findViewById(R.id.edit_desc_insert);
         imgfoto = findViewById(R.id.img_foto_insert);
         imgfoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,15 +91,16 @@ public class InsertPost extends AppCompatActivity {
         btinsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = editTitle.getText().toString(); // Corrected EditText fields
-                String desc = editDesc.getText().toString(); // Corrected EditText fields
+                String title = editTitle.getText().toString();
+                String desc = editDesc.getText().toString();
                 BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
                 Bitmap bmp = drw.getBitmap();
                 Post novo = new Post(title, desc, bmp);
-                MyBD myBD = new MyBD(InsertPost.this, 1);
+                MyBD myBD = new MyBD(InsertPost.this,2);
                 myBD.insertPost(novo, bmp);
                 App.loadList();
-                finish();
+                Intent intent = new Intent(InsertPost.this, MainActivity.class);
+                startActivity(intent);
                 Log.d(TAG, "Inserted new post and finished activity.");
             }
         });
@@ -79,7 +109,8 @@ public class InsertPost extends AppCompatActivity {
         btcancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(InsertPost.this, MainActivity.class);
+                startActivity(intent);
                 Log.d(TAG, "Cancelled post insertion and finished activity.");
             }
         });

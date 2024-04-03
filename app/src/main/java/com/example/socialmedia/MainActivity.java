@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int CANAL_FOTO = 1;
     RecyclePost adpt;
     RecyclerView recyclerView;
-    FloatingActionButton fab;
 
     public  int pos;
     public  static  final int CANALINSERT=2;
@@ -40,31 +39,34 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    if (item.getItemId() == R.id.navigation_home) {
-                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        return true;
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.navigation_home) {
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    return true;
 
-                    } else if (item.getItemId() == R.id.navigation_profile) {
-                        Intent it = new Intent(MainActivity.this, InsertPost.class);
-                        startActivityForResult(it,CANALINSERT);
-                        Log.d(TAG, "Started activity for inserting new post.");
-                        return true;
-                    } else if (item.getItemId() == R.id.navigation_post) {
-                        return true;
-                    }
-                    return false;
+                } else if (item.getItemId() == R.id.navigation_post) {
+                    Intent intent = new Intent(MainActivity.this, InsertPost.class);
+                    startActivity(intent);
+                    Log.d(TAG, "Started activity for inserting new post.");
+                    return true;
+                } else if (item.getItemId() == R.id.navigation_profile) {
+                    Intent intent = new Intent(MainActivity.this, Login.class);
+                    startActivity(intent);
+                    Log.d(TAG, "Started login activity.");
+                    return true;
                 }
-            });
+                return false;
+            }
+        });
 
         recyclerView = findViewById(R.id.recycle_post_main);
         adpt = new RecyclePost(MainActivity.this, App.stand);

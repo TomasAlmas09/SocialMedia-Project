@@ -20,7 +20,9 @@ public class MyBD extends SQLiteOpenHelper {
     public static final String TITLE = "tittle";
     public static final String DESCRIPTION = "description";
     public static final String FOTO = "foto";
-
+    private static final String TB_USER = "tb_user";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
     private static final String TAG = "MyBD";
 
     public MyBD(@Nullable Context context, int version) {
@@ -29,18 +31,32 @@ public class MyBD extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        try{
+        Log.d(TAG, "onCreate method called");
         String sql = "CREATE TABLE " + TB_POST + " ( " +
-                TITLE + " TEXT, " +
-                DESCRIPTION + " TEXT, " +
-                FOTO + " BLOB " +
-                ")";
+                "    " + TITLE + "        TEXT  PRIMARY KEY, " +
+                "    " + DESCRIPTION + "    TEXT, " +
+                "    " + FOTO + "      BLOB " +
+                ");";
         db.execSQL(sql);
-        Log.d(TAG, "Database table created.");
+        Log.d(TAG, "Post table created.");
+
+        String userTableSql = "CREATE TABLE " + TB_USER +
+                "(" + USERNAME + " TEXT PRIMARY KEY," +
+                PASSWORD + " TEXT)";
+        db.execSQL(userTableSql);
+        Log.d(TAG, "User table created.");
+    } catch (SQLException e) {
+        Log.e(TAG, "Error creating tables: " + e.getMessage());
     }
+    }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TB_POST);
+        db.execSQL("DROP TABLE IF EXISTS " + TB_USER);
         onCreate(db);
         Log.d(TAG, "Database table upgraded.");
     }
@@ -65,6 +81,51 @@ public class MyBD extends SQLiteOpenHelper {
         }
         return resp;
     }
+
+    public void registerUser(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USERNAME, username);
+        values.put(PASSWORD, password);
+        db.insert(TB_USER, null, values);
+        db.close();
+    }
+
+    public boolean checkUsernameExists(String username) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = {USERNAME};
+        String selection = USERNAME + " = ?";
+        String[] selectionArgs = {username};
+        Cursor cursor = db.query(TB_USER, columns, selection, selectionArgs, null, null, null);
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        return count > 0;
+    }
+
+    public boolean loginUser(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {USERNAME};
+        String selection = USERNAME + " = ? AND " + PASSWORD + " = ?";
+        String[] selectionArgs = {username, password};
+        Cursor cursor = null;
+        int count = 0;
+        try {
+            cursor = db.query(TB_USER, columns, selection, selectionArgs, null, null, null);
+            count = cursor.getCount();
+        } catch (SQLException e) {
+            Log.e(TAG, "Error querying login credentials: " + e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return count > 0;
+    }
+
+
+
 
     public List<Post> carregaLista() {
         List<Post> lista = new ArrayList<>();
