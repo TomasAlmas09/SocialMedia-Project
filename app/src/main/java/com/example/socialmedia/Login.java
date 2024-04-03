@@ -39,6 +39,8 @@ public class Login extends AppCompatActivity {
                 Log.d(TAG, "Login button clicked");
                 if (myBD.loginUser(username, password)) {
                     Log.d(TAG, "Login successful");
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
                     Toast.makeText(Login.this, "LOGIN SUCCESSFUL", Toast.LENGTH_SHORT).show();
                     // Prosseguir com as próximas etapas após o login bem-sucedido
                 } else {
