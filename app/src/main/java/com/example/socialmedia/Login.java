@@ -43,14 +43,19 @@ public class Login extends AppCompatActivity {
                 Log.d(TAG, "Login button clicked");
                 if (myBD.loginUser(username, password)) {
                     Log.d(TAG, "Login successful");
+                    CurrentUser currentUser = CurrentUser.getInstance();
+                    currentUser.setUsername(username);
+                    currentUser.setPhoto("image/*".getBytes());
+
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
                     Toast.makeText(Login.this, "LOGIN SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    // Prosseguir com as próximas etapas após o login bem-sucedido
+                    // Proceed with further steps after successful login
                 } else {
                     Log.d(TAG, "Login failed");
                     Toast.makeText(Login.this, "LOGIN FAILED !!!", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 

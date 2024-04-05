@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -15,7 +14,10 @@ public class Post implements Parcelable {
     private static final String TAG = "Post"; // Tag for logging
     private String title;
     private String modelo;
+    private String username;
     private byte[] foto;
+    private byte[] userfoto;
+
     // endregion
 
     //region Getters & Setters
@@ -23,14 +25,19 @@ public class Post implements Parcelable {
     protected Post(Parcel in) {
         title = in.readString();
         modelo = in.readString();
+        username = in.readString();
         foto = in.createByteArray();
+        userfoto = in.createByteArray();
+
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(modelo);
+        dest.writeString(username);
         dest.writeByteArray(foto);
+
     }
 
     @Override
@@ -74,23 +81,28 @@ public class Post implements Parcelable {
         this.foto = foto;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return String.format("%s %s", title, modelo);
     }
 
-    public Post(String title, String modelo, byte[] foto) {
+    // Update the Post constructor to accept Bitmap objects for both photos
+    public Post(String title, String username, String description, Bitmap postPhoto, Bitmap bmp) {
         this.title = title;
-        this.modelo = modelo;
-        this.foto = foto;
+        this.username = username;
+        this.modelo = description;
+        this.foto = bitmapToArray(postPhoto);
     }
 
-    public Post(String title, String modelo, Bitmap bmp) {
-        this.title = title;
-        this.modelo = modelo;
-        this.foto = bitmapToArray(bmp);
-    }
 
     public static byte[] bitmapToArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -102,10 +114,4 @@ public class Post implements Parcelable {
         return BitmapFactory.decodeByteArray(foto, 0, foto.length);
     }
 
-    // Log method for debugging
-    public void logPostInfo() {
-        Log.d(TAG, "Post title: " + title);
-        Log.d(TAG, "Post modelo: " + modelo);
-        Log.d(TAG, "Post foto length: " + (foto != null ? foto.length : 0));
-    }
 }

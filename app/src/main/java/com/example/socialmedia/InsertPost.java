@@ -2,12 +2,12 @@ package com.example.socialmedia;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
+import android.graphics.Bitmap;
 
 public class InsertPost extends AppCompatActivity {
 
@@ -39,6 +40,7 @@ public class InsertPost extends AppCompatActivity {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imgfoto.setImageBitmap(bmp);
+
                 Log.d(TAG, "Image set successfully from onActivityResult.");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -58,6 +60,12 @@ public class InsertPost extends AppCompatActivity {
         editTitle = findViewById(R.id.edit_tittle_insert);
         editDesc = findViewById(R.id.edit_desc_insert);
         imgfoto = findViewById(R.id.img_foto_insert);
+
+        // Get username and photo from CurrentUser
+        CurrentUser currentUser = CurrentUser.getInstance();
+        String username = currentUser.getUsername();
+        byte[] userPhoto = currentUser.getPhoto(); // Obtain user photo from CurrentUser
+
         imgfoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +84,7 @@ public class InsertPost extends AppCompatActivity {
                 String desc = editDesc.getText().toString();
                 BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
                 Bitmap bmp = drw.getBitmap();
-                Post novo = new Post(title, desc, bmp);
+                Post novo = new Post(title, username, desc, bmp, bmp);
                 MyBD myBD = new MyBD(InsertPost.this, 2);
                 myBD.insertPost(novo, bmp);
                 App.loadList();
@@ -85,6 +93,9 @@ public class InsertPost extends AppCompatActivity {
                 Log.d(TAG, "Inserted new post and finished activity.");
             }
         });
+
+
+
 
         btcancel = findViewById(R.id.bt_cancel_insert);
         btcancel.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +106,5 @@ public class InsertPost extends AppCompatActivity {
                 Log.d(TAG, "Cancelled post insertion and finished activity.");
             }
         });
-
-
     }
 }

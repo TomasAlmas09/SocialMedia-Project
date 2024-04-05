@@ -33,8 +33,8 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView editId;
-        TextView editModelo;
-        ImageView imgFoto;
+        TextView editModelo, editUser;
+        ImageView imgFoto, imgUser;
         Button btnDelete;
         Button btnUpdate;
 
@@ -43,6 +43,8 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             editId = itemView.findViewById(R.id.edit_idcar_itempost);
             editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
             imgFoto = itemView.findViewById(R.id.img_foto_itempost);
+            imgUser = itemView.findViewById(R.id.img_foto_user);
+            editUser = itemView.findViewById(R.id.edit_username);
 
         }
     }
@@ -65,6 +67,7 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
         Post post = posts.get(position);
         holder.editId.setText(String.valueOf(post.getTitle()));
         holder.editModelo.setText(post.getModelo());
+        holder.editUser.setText(post.getUsername());
 
         if (post.getFoto() != null && post.getFoto().length > 0) {
             holder.imgFoto.setImageBitmap(Post.arrayToBitmap(post.getFoto()));
@@ -73,18 +76,8 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             holder.imgFoto.setImageBitmap(null);
         }
 
-        holder.imgFoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Image clicked at position: " + position);
-                if (listener != null) {
-                    int adapterPosition = holder.getAdapterPosition();
-                    if (adapterPosition != RecyclerView.NO_POSITION) {
-                        listener.SacaFoto(adapterPosition);
-                    }
-                }
-            }
-        });
+
+
     }
 
     @Override

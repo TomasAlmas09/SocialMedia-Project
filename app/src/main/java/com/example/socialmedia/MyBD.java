@@ -17,11 +17,12 @@ import java.util.List;
 public class MyBD extends SQLiteOpenHelper {
     public static final String DATABASENAME = "socialmedia.db";
     public static final String TB_POST = "tb_post";
-    public static final String TITLE = "tittle";
+    public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String FOTO = "foto";
     private static final String TB_USER = "tb_user";
     private static final String USERNAME = "username";
+    private static final String USER_PHOTO = "user_photo"; // added missing semicolon
     private static final String PASSWORD = "password";
     private static final String TAG = "MyBD";
 
@@ -31,27 +32,30 @@ public class MyBD extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        try{
-        Log.d(TAG, "onCreate method called");
-        String sql = "CREATE TABLE " + TB_POST + " ( " +
-                "    " + TITLE + "        TEXT  PRIMARY KEY, " +
-                "    " + DESCRIPTION + "    TEXT, " +
-                "    " + FOTO + "      BLOB " +
-                ");";
-        db.execSQL(sql);
-        Log.d(TAG, "Post table created.");
+        try {
+            Log.d(TAG, "onCreate method called");
+            String sql = "CREATE TABLE " + TB_POST + " ( " +
+                    TITLE + " TEXT PRIMARY KEY, " +
+                    USERNAME + " TEXT, " +
+                    USER_PHOTO + " BLOB, " +
+                    DESCRIPTION + " TEXT, " +
+                    FOTO + " BLOB, " +
+                    "FOREIGN KEY (" + USERNAME + ") REFERENCES " + TB_USER + "(" + USERNAME + ")," +
+                    "FOREIGN KEY (" + USER_PHOTO + ") REFERENCES " + TB_USER + "(" + USER_PHOTO + ")" +
+                    ");";
+            db.execSQL(sql);
+            Log.d(TAG, "Post table created.");
 
-        String userTableSql = "CREATE TABLE " + TB_USER +
-                "(" + USERNAME + " TEXT PRIMARY KEY," +
-                PASSWORD + " TEXT)";
-        db.execSQL(userTableSql);
-        Log.d(TAG, "User table created.");
-    } catch (SQLException e) {
-        Log.e(TAG, "Error creating tables: " + e.getMessage());
+            String userTableSql = "CREATE TABLE " + TB_USER +
+                    "(" + USERNAME + " TEXT PRIMARY KEY, " +
+                    USER_PHOTO + " BLOB, " +
+                    PASSWORD + " TEXT)";
+            db.execSQL(userTableSql);
+            Log.d(TAG, "User table created.");
+        } catch (SQLException e) {
+            Log.e(TAG, "Error creating tables: " + e.getMessage());
+        }
     }
-    }
-
-
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -60,7 +64,6 @@ public class MyBD extends SQLiteOpenHelper {
         onCreate(db);
         Log.d(TAG, "Database table upgraded.");
     }
-
     public long insertPost(Post novo, Bitmap bmp) {
         long resp = 0;
         SQLiteDatabase db = getWritableDatabase();
@@ -68,6 +71,8 @@ public class MyBD extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues cv = new ContentValues();
             cv.put(TITLE, novo.getTitle());
+            cv.put(USERNAME, novo.getUsername());
+            cv.put(USER_PHOTO, CurrentUser.getInstance().getPhoto());
             cv.put(DESCRIPTION, novo.getModelo());
             cv.put(FOTO, Post.bitmapToArray(bmp));
             resp = db.insert(TB_POST, null, cv);
@@ -82,15 +87,15 @@ public class MyBD extends SQLiteOpenHelper {
         return resp;
     }
 
-    public void registerUser(String username, String password) {
+    public void registerUser(String username, String password, Bitmap userPhoto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USERNAME, username);
         values.put(PASSWORD, password);
+        values.put(USER_PHOTO, Post.bitmapToArray(userPhoto)); // Convert Bitmap to byte array
         db.insert(TB_USER, null, values);
         db.close();
     }
-
     public boolean checkUsernameExists(String username) {
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = {USERNAME};
@@ -124,9 +129,6 @@ public class MyBD extends SQLiteOpenHelper {
         return count > 0;
     }
 
-
-
-
     public List<Post> carregaLista() {
         List<Post> lista = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -138,7 +140,9 @@ public class MyBD extends SQLiteOpenHelper {
                 Post c = new Post(
                         cur.getString(0),
                         cur.getString(1),
-                        cur.getBlob(2)
+                        cur.getString(3),
+                        Post.arrayToBitmap(cur.getBlob(4)),
+                        Post.arrayToBitmap(cur.getBlob(2))
                 );
                 lista.add(c);
             } while (cur.moveToNext());
