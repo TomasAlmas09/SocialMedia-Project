@@ -22,12 +22,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 
 public class InsertPost extends AppCompatActivity {
+
     private static final int CANALFOTO = 3;
     EditText editTitle, editDesc;
     Button btinsert, btcancel;
     ImageView imgfoto;
 
     private static final String TAG = "InsertPost";
+    private BottomBar bottomBar; // Instantiate BottomBar
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -49,30 +51,9 @@ public class InsertPost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.navigation_home) {
-                    Intent intent = new Intent(InsertPost.this, MainActivity.class);
-                    startActivity(intent);
-                    return true;
-
-                } else if (item.getItemId() == R.id.navigation_post) {
-                    Intent intent = new Intent(InsertPost.this, InsertPost.class);
-                    startActivity(intent);
-                    Log.d(TAG, "Started activity for inserting new post.");
-                    return true;
-                } else if (item.getItemId() == R.id.navigation_profile) {
-                    Intent intent = new Intent(InsertPost.this, Login.class);
-                    startActivity(intent);
-                    Log.d(TAG, "Started login activity.");
-                    return true;
-                }
-                return false;
-            }
-        });
+        // Instantiate BottomBar and setup bottom navigation bar
+        bottomBar = new BottomBar();
+        bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
 
         editTitle = findViewById(R.id.edit_tittle_insert);
         editDesc = findViewById(R.id.edit_desc_insert);
@@ -96,7 +77,7 @@ public class InsertPost extends AppCompatActivity {
                 BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
                 Bitmap bmp = drw.getBitmap();
                 Post novo = new Post(title, desc, bmp);
-                MyBD myBD = new MyBD(InsertPost.this,2);
+                MyBD myBD = new MyBD(InsertPost.this, 2);
                 myBD.insertPost(novo, bmp);
                 App.loadList();
                 Intent intent = new Intent(InsertPost.this, MainActivity.class);
@@ -114,5 +95,7 @@ public class InsertPost extends AppCompatActivity {
                 Log.d(TAG, "Cancelled post insertion and finished activity.");
             }
         });
+
+
     }
 }

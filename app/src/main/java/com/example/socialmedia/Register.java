@@ -13,11 +13,15 @@ public class Register extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private MyBD myBD;
     private EditText usernameEditText, passwordEditText;
+    BottomBar bottomBar; // Instantiate BottomBar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        // Instantiate BottomBar and setup bottom navigation bar
+        bottomBar = new BottomBar();
+        bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
 
         myBD = new MyBD(this,2); // Initialize MyBD instance
 

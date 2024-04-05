@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.socialmedia.BottomBar;
 
 public class MainActivity extends AppCompatActivity {
     public static final int CANAL_FOTO = 1;
@@ -36,37 +37,16 @@ public class MainActivity extends AppCompatActivity {
     public  static  final int CANALINSERT=2;
 
     private static final String TAG = "MainActivity";
-
+    BottomBar bottomBar; // Instantiate BottomBar
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.navigation_home) {
-                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    return true;
-
-                } else if (item.getItemId() == R.id.navigation_post) {
-                    Intent intent = new Intent(MainActivity.this, InsertPost.class);
-                    startActivity(intent);
-                    Log.d(TAG, "Started activity for inserting new post.");
-                    return true;
-                } else if (item.getItemId() == R.id.navigation_profile) {
-                    Intent intent = new Intent(MainActivity.this, Login.class);
-                    startActivity(intent);
-                    Log.d(TAG, "Started login activity.");
-                    return true;
-                }
-                return false;
-            }
-        });
+// Set up BottomBar
+        bottomBar = new BottomBar();
+        bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
 
         recyclerView = findViewById(R.id.recycle_post_main);
         adpt = new RecyclePost(MainActivity.this, App.stand);

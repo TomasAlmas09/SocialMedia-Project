@@ -17,11 +17,15 @@ public class Login extends AppCompatActivity {
 
     private TextView usernameTextView, passwordTextView;
     private MaterialButton loginButton, registerButton;
+    BottomBar bottomBar; // Instantiate BottomBar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        // Instantiate BottomBar and setup bottom navigation bar
+        bottomBar = new BottomBar();
+        bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
         myBD = new MyBD(this,2);
 
         usernameTextView = findViewById(R.id.username);
