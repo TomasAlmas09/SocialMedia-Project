@@ -2,6 +2,7 @@ package com.example.socialmedia;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 
@@ -97,14 +96,14 @@ public class InsertPost extends AppCompatActivity {
                 if (imgfoto != null && imgfoto.getDrawable() != null) {
                     BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
                     Bitmap postBmp = drw.getBitmap();
-                    Bitmap userBmp = drw.getBitmap(); // Assuming the user photo is the same as the post photo
 
-                    // Convert Bitmaps to byte arrays
-                    byte[] postPhotoByteArray = Post.bitmapToArray(postBmp);
-                    byte[] userPhotoByteArray = Post.bitmapToArray(userBmp);
+                    // Get username and user photo from CurrentUser instance
+                    CurrentUser currentUser = CurrentUser.getInstance();
+                    String username = currentUser.getUsername();
+                    byte[] userPhotoByteArray = currentUser.getPhoto();
 
                     // Create a new Post object
-                    Post novo = new Post(title, username, desc, postBmp, userBmp);
+                    Post novo = new Post(title, username, desc, postBmp, BitmapFactory.decodeByteArray(userPhotoByteArray, 0, userPhotoByteArray.length));
 
                     // Insert the post into the database
                     MyBD myBD = new MyBD(InsertPost.this, 2);
@@ -126,6 +125,11 @@ public class InsertPost extends AppCompatActivity {
                 }
             }
         });
+
+
+
+
+
 
         // Set click listener for canceling post insertion
         btcancel = findViewById(R.id.bt_cancel_insert);

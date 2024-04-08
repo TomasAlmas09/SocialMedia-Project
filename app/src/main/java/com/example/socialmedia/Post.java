@@ -122,6 +122,8 @@ public class Post implements Parcelable {
 
 
 
+
+
     public static byte[] bitmapToArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);

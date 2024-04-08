@@ -1,5 +1,10 @@
 package com.example.socialmedia;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayOutputStream;
+
 // Class representing the current user of the application
 public class CurrentUser {
     // Singleton instance of CurrentUser
@@ -48,4 +53,5 @@ public class CurrentUser {
         // Check if the username has been set to determine if the user is logged in
         return getUsername() != null && !getUsername().isEmpty();
     }
+
 }

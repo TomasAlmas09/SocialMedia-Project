@@ -45,7 +45,6 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             editId = itemView.findViewById(R.id.edit_idcar_itempost);
             editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
             imgFoto = itemView.findViewById(R.id.img_foto_itempost);
-            imgUser = itemView.findViewById(R.id.img_foto_user);
             editUser = itemView.findViewById(R.id.edit_username);
         }
     }

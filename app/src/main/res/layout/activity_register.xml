@@ -82,7 +82,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/bottom_bar" />
+            app:menu="@menu/bottom_bar"
+            app:itemBackground="@null"
+            app:itemActiveIndicatorStyle="@null"/>
 
     </LinearLayout>
 

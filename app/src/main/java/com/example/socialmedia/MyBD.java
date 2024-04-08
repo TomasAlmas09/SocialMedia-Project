@@ -50,7 +50,7 @@ public class MyBD extends SQLiteOpenHelper {
 
             String userTableSql = "CREATE TABLE " + TB_USER +
                     "(" + USERNAME + " TEXT PRIMARY KEY, " +
-                    USER_PHOTO + " BLOB, " +
+                    USER_PHOTO + " BLOB, " + // Define USER_PHOTO column as BLOB
                     PASSWORD + " TEXT)";
             db.execSQL(userTableSql);
             Log.d(TAG, "User table created.");
@@ -77,7 +77,7 @@ public class MyBD extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put(TITLE, novo.getTitle());
             cv.put(USERNAME, novo.getUsername());
-            cv.put(USER_PHOTO, CurrentUser.getInstance().getPhoto()); // Get user photo from CurrentUser instance
+            cv.put(USER_PHOTO, novo.getUserPhoto()); // Use the byte array directly
             cv.put(DESCRIPTION, novo.getModelo());
             cv.put(FOTO, Post.bitmapToArray(bmp));
             resp = db.insert(TB_POST, null, cv);
@@ -91,7 +91,6 @@ public class MyBD extends SQLiteOpenHelper {
         }
         return resp;
     }
-
 
 
     // Register a new user in the database
