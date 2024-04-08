@@ -60,6 +60,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
+    // Handle the result of selecting an image from gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -76,6 +77,7 @@ public class Register extends AppCompatActivity {
         }
     }
 
+    // Method to register a new user
     private void registerUser() {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
@@ -89,6 +91,7 @@ public class Register extends AppCompatActivity {
         BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
         Bitmap bmp = drw.getBitmap();
 
+        // Check if username or password is empty
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
@@ -110,5 +113,4 @@ public class Register extends AppCompatActivity {
         Log.d(TAG, "User registered: " + username);
         finish(); // Finish the current activity
     }
-
 }

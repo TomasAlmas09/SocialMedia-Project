@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +21,18 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
     private List<Post> posts;
     private IOnSacaFoto listener;
 
+    // Constructor to initialize RecyclePost adapter with a list of posts
     public RecyclePost(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
     }
 
+    // Interface to handle image selection
     public void setOnSacaFotoListener(IOnSacaFoto listener) {
         this.listener = listener;
     }
 
+    // ViewHolder class to hold the views
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView editId;
         TextView editModelo, editUser;
@@ -45,16 +47,15 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             imgFoto = itemView.findViewById(R.id.img_foto_itempost);
             imgUser = itemView.findViewById(R.id.img_foto_user);
             editUser = itemView.findViewById(R.id.edit_username);
-
         }
     }
 
-
-
+    // Method to set the list of posts
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 
+    // Inflate the itempost layout and return a new ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,6 +63,7 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
         return new ViewHolder(itemView);
     }
 
+    // Bind data to the views
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = posts.get(position);
@@ -69,17 +71,16 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
         holder.editModelo.setText(post.getModelo());
         holder.editUser.setText(post.getUsername());
 
+        // Set the photo of the post if available
         if (post.getFoto() != null && post.getFoto().length > 0) {
             holder.imgFoto.setImageBitmap(Post.arrayToBitmap(post.getFoto()));
         } else {
             // Clear the image if there is no photo for this post
             holder.imgFoto.setImageBitmap(null);
         }
-
-
-
     }
 
+    // Return the number of posts
     @Override
     public int getItemCount() {
         return posts.size();

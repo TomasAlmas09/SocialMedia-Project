@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyBD extends SQLiteOpenHelper {
+    // Database name and table names
     public static final String DATABASENAME = "socialmedia.db";
     public static final String TB_POST = "tb_post";
     public static final String TITLE = "title";
@@ -22,14 +23,16 @@ public class MyBD extends SQLiteOpenHelper {
     public static final String FOTO = "foto";
     private static final String TB_USER = "tb_user";
     private static final String USERNAME = "username";
-    private static final String USER_PHOTO = "user_photo"; // added missing semicolon
+    private static final String USER_PHOTO = "user_photo";
     private static final String PASSWORD = "password";
     private static final String TAG = "MyBD";
 
+    // Constructor
     public MyBD(@Nullable Context context, int version) {
         super(context, DATABASENAME, null, version);
     }
 
+    // Create database tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
@@ -57,6 +60,7 @@ public class MyBD extends SQLiteOpenHelper {
         }
     }
 
+    // Upgrade database tables
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TB_POST);
@@ -64,6 +68,8 @@ public class MyBD extends SQLiteOpenHelper {
         onCreate(db);
         Log.d(TAG, "Database table upgraded.");
     }
+
+    // Insert a new post into the database
     public long insertPost(Post novo, Bitmap bmp) {
         long resp = 0;
         SQLiteDatabase db = getWritableDatabase();
@@ -87,15 +93,18 @@ public class MyBD extends SQLiteOpenHelper {
         return resp;
     }
 
+    // Register a new user in the database
     public void registerUser(String username, String password, Bitmap userPhoto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USERNAME, username);
         values.put(PASSWORD, password);
-        values.put(USER_PHOTO, Post.bitmapToArray(userPhoto)); // Convert Bitmap to byte array
+        values.put(USER_PHOTO, Post.bitmapToArray(userPhoto));
         db.insert(TB_USER, null, values);
         db.close();
     }
+
+    // Check if a username already exists in the database
     public boolean checkUsernameExists(String username) {
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = {USERNAME};
@@ -108,6 +117,7 @@ public class MyBD extends SQLiteOpenHelper {
         return count > 0;
     }
 
+    // Check login credentials
     public boolean loginUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {USERNAME};
@@ -129,6 +139,7 @@ public class MyBD extends SQLiteOpenHelper {
         return count > 0;
     }
 
+    // Load the list of posts from the database
     public List<Post> carregaLista() {
         List<Post> lista = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();

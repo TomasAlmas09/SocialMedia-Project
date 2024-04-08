@@ -2,7 +2,6 @@ package com.example.socialmedia;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
-import android.graphics.Bitmap;
 
+// Activity for inserting a new post
 public class InsertPost extends AppCompatActivity {
 
     private static final int CANALFOTO = 3;
@@ -29,21 +28,27 @@ public class InsertPost extends AppCompatActivity {
     Button btinsert, btcancel;
     ImageView imgfoto;
 
+    // Tag for logging
     private static final String TAG = "InsertPost";
-    private BottomBar bottomBar; // Instantiate BottomBar
+    // Instantiate BottomBar
+    private BottomBar bottomBar;
 
+    // Method to handle result from activity for selecting image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CANALFOTO && resultCode == RESULT_OK && data != null) {
+        if (requestCode == CANALFOTO && resultCode == RESULT_OK && data != null) {
+            // Get the selected image URI
             Uri uri = data.getData();
             try {
+                // Convert URI to bitmap and set it to the ImageView
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imgfoto.setImageBitmap(bmp);
-
+                // Log success message
                 Log.d(TAG, "Image set successfully from onActivityResult.");
             } catch (IOException e) {
                 e.printStackTrace();
+                // Log error message if setting image fails
                 Log.e(TAG, "Error setting image from onActivityResult: " + e.getMessage());
             }
         }
@@ -57,6 +62,7 @@ public class InsertPost extends AppCompatActivity {
         bottomBar = new BottomBar();
         bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
 
+        // Initialize views
         editTitle = findViewById(R.id.edit_tittle_insert);
         editDesc = findViewById(R.id.edit_desc_insert);
         imgfoto = findViewById(R.id.img_foto_insert);
@@ -66,43 +72,53 @@ public class InsertPost extends AppCompatActivity {
         String username = currentUser.getUsername();
         byte[] userPhoto = currentUser.getPhoto(); // Obtain user photo from CurrentUser
 
+        // Set click listener for selecting image
         imgfoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Start activity for selecting image from gallery
                 Intent itfoto = new Intent(Intent.ACTION_GET_CONTENT);
                 itfoto.setType("image/*");
                 startActivityForResult(itfoto, CANALFOTO);
+                // Log the event
                 Log.d(TAG, "Started activity for image selection.");
             }
         });
 
+        // Set click listener for inserting new post
         btinsert = findViewById(R.id.bt_insert_insert);
         btinsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get title, description, and bitmap from views
                 String title = editTitle.getText().toString();
                 String desc = editDesc.getText().toString();
                 BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
                 Bitmap bmp = drw.getBitmap();
+                // Create a new Post object
                 Post novo = new Post(title, username, desc, bmp, bmp);
+                // Insert the post into the database
                 MyBD myBD = new MyBD(InsertPost.this, 2);
                 myBD.insertPost(novo, bmp);
+                // Reload the post list
                 App.loadList();
+                // Start MainActivity
                 Intent intent = new Intent(InsertPost.this, MainActivity.class);
                 startActivity(intent);
+                // Log the event
                 Log.d(TAG, "Inserted new post and finished activity.");
             }
         });
 
-
-
-
+        // Set click listener for canceling post insertion
         btcancel = findViewById(R.id.bt_cancel_insert);
         btcancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Start MainActivity
                 Intent intent = new Intent(InsertPost.this, MainActivity.class);
                 startActivity(intent);
+                // Log the event
                 Log.d(TAG, "Cancelled post insertion and finished activity.");
             }
         });

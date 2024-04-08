@@ -10,41 +10,41 @@ import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
 
 public class Post implements Parcelable {
-    //region fields
-    private static final String TAG = "Post"; // Tag for logging
+    // Tag for logging
+    private static final String TAG = "Post";
+
+    // Fields
     private String title;
     private String modelo;
     private String username;
     private byte[] foto;
     private byte[] userfoto;
 
-    // endregion
-
-    //region Getters & Setters
-
+    // Constructor for Parcelable
     protected Post(Parcel in) {
         title = in.readString();
         modelo = in.readString();
         username = in.readString();
         foto = in.createByteArray();
         userfoto = in.createByteArray();
-
     }
 
+    // Method to write object data to Parcel
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(modelo);
         dest.writeString(username);
         dest.writeByteArray(foto);
-
     }
 
+    // Method to describe contents (not used here)
     @Override
     public int describeContents() {
         return 0;
     }
 
+    // Creator for Parcelable
     public static final Creator<Post> CREATOR = new Creator<Post>() {
         @Override
         public Post createFromParcel(Parcel in) {
@@ -57,6 +57,7 @@ public class Post implements Parcelable {
         }
     };
 
+    // Getters and Setters
     public String getTitle() {
         return title;
     }
@@ -89,13 +90,14 @@ public class Post implements Parcelable {
         this.username = username;
     }
 
+    // toString method
     @NonNull
     @Override
     public String toString() {
         return String.format("%s %s", title, modelo);
     }
 
-    // Update the Post constructor to accept Bitmap objects for both photos
+    // Constructor to accept Bitmap objects for photos
     public Post(String title, String username, String description, Bitmap postPhoto, Bitmap bmp) {
         this.title = title;
         this.username = username;
@@ -103,15 +105,15 @@ public class Post implements Parcelable {
         this.foto = bitmapToArray(postPhoto);
     }
 
-
+    // Method to convert Bitmap to byte array
     public static byte[] bitmapToArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
+    // Method to convert byte array to Bitmap
     public static Bitmap arrayToBitmap(byte[] foto) {
         return BitmapFactory.decodeByteArray(foto, 0, foto.length);
     }
-
 }
