@@ -52,14 +52,25 @@ public class BottomBar extends AppCompatActivity {
                             Log.d(TAG, "User not logged in, redirected to login page.");
                         }
                         return true;
-                    } else if (itemId == R.id.navigation_profile) {
-                        // Start the Profile activity when Profile is clicked
-                        Intent profileIntent = new Intent(activity, Login.class);
+                    }  else if (itemId == R.id.navigation_profile) {
+                    // Check if the user is logged in
+                    if (CurrentUser.getInstance().isLoggedIn()) {
+                        // Start the Profile activity if the user is logged in
+                        Intent profileIntent = new Intent(activity, Profile.class);
                         activity.startActivity(profileIntent);
                         // Log the event
                         Log.d(TAG, "Started profile activity.");
-                        return true;
                     } else {
+                        // Start the Login activity if the user is not logged in
+                        Intent loginIntent = new Intent(activity, Login.class);
+                        activity.startActivity(loginIntent);
+                        // Log the event
+                        Log.d(TAG, "User not logged in, redirected to login page.");
+                    }
+                    return true;
+                }
+
+                    else {
                         // Log if an unexpected navigation item is clicked
                         Log.d(TAG, "Unexpected navigation item clicked: " + item.getTitle());
                     }
@@ -71,5 +82,6 @@ public class BottomBar extends AppCompatActivity {
             // Log an error if BottomNavigationView is not found in the layout
             Log.e(TAG, "BottomNavigationView not found in the layout.");
         }
+
     }
 }

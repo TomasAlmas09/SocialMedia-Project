@@ -163,4 +163,58 @@ public class MyBD extends SQLiteOpenHelper {
         db.close();
         return lista;
     }
+
+    public List<Post> carregaListaUser() {
+        List<Post> lista = new ArrayList<>();
+        String username = CurrentUser.getInstance().getUsername();
+        if (username != null) {
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cur = null;
+            try {
+                String sql = "SELECT * FROM " + TB_POST + " WHERE " + USERNAME + " = ?";
+                cur = db.rawQuery(sql, new String[]{username});
+                Log.d(TAG, "Cursor count: " + cur.getCount()); // Debug log to check cursor count
+                if (cur != null && cur.moveToFirst()) {
+                    do {
+                        // Verifique se as colunas existem no cursor antes de acessá-las
+                        int titleIndex = cur.getColumnIndex(TITLE);
+                        int usernameIndex = cur.getColumnIndex(USERNAME);
+                        int descriptionIndex = cur.getColumnIndex(DESCRIPTION);
+                        int fotoIndex = cur.getColumnIndex(FOTO);
+                        int userPhotoIndex = cur.getColumnIndex(USER_PHOTO);
+
+                        Log.d(TAG, "Column indices: " + titleIndex + ", " + usernameIndex + ", " +
+                                descriptionIndex + ", " + fotoIndex + ", " + userPhotoIndex); // Debug log to check column indices
+
+                        if (titleIndex != -1 && usernameIndex != -1 && descriptionIndex != -1
+                                && fotoIndex != -1 && userPhotoIndex != -1) {
+                            Post post = new Post(
+                                    cur.getString(titleIndex),
+                                    cur.getString(usernameIndex),
+                                    cur.getString(descriptionIndex),
+                                    Post.arrayToBitmap(cur.getBlob(fotoIndex)),
+                                    Post.arrayToBitmap(cur.getBlob(userPhotoIndex))
+                            );
+                            lista.add(post);
+                        } else {
+                            Log.e(TAG, "Column index not found.");
+                        }
+                    } while (cur.moveToNext());
+                }
+            } catch (SQLException e) {
+                Log.e(TAG, "Error loading user posts: " + e.getMessage());
+            } finally {
+                if (cur != null) {
+                    cur.close();
+                }
+                db.close();
+            }
+        } else {
+            Log.e(TAG, "Username is null.");
+        }
+        return lista;
+    }
+
+
+
 }

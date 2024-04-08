@@ -25,6 +25,7 @@
         <activity android:name=".InsertPost" />
         <activity android:name=".Login" />
         <activity android:name=".Register" />
+        <activity android:name=".Profile" />
     </application>
 
 </manifest>

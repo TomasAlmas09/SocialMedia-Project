@@ -9,6 +9,7 @@ import java.util.List;
 
 public class App extends Application {
     public static List<Post> stand = new ArrayList<>();
+    public static List<Post> user = new ArrayList<>();
     public static Context ctx;
     public static final String TAG = "App";
 
@@ -21,6 +22,7 @@ public class App extends Application {
 
         // Load the list after the context has been initialized
         loadList();
+        loadListUser();
     }
 
     public static void loadList() {
@@ -28,6 +30,15 @@ public class App extends Application {
             MyBD myBD = new MyBD(ctx,2);
             stand = myBD.carregaLista();
             Log.d(TAG, "List loaded successfully.");
+        } else {
+            Log.e(TAG, "Context is null. Unable to load list.");
+        }
+    }
+    public static void loadListUser() {
+        if (ctx != null) {
+            MyBD myBD = new MyBD(ctx,2);
+            user = myBD.carregaListaUser();
+            Log.d(TAG, "List User loaded successfully.");
         } else {
             Log.e(TAG, "Context is null. Unable to load list.");
         }
