@@ -43,8 +43,7 @@ public class MyBD extends SQLiteOpenHelper {
                     USER_PHOTO + " BLOB, " +
                     DESCRIPTION + " TEXT, " +
                     FOTO + " BLOB, " +
-                    "FOREIGN KEY (" + USERNAME + ") REFERENCES " + TB_USER + "(" + USERNAME + ")," +
-                    "FOREIGN KEY (" + USER_PHOTO + ") REFERENCES " + TB_USER + "(" + USER_PHOTO + ")" +
+                    "FOREIGN KEY (" + USERNAME + ") REFERENCES " + TB_USER + "(" + USERNAME + ")" +
                     ");";
             db.execSQL(sql);
             Log.d(TAG, "Post table created.");
@@ -78,7 +77,7 @@ public class MyBD extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put(TITLE, novo.getTitle());
             cv.put(USERNAME, novo.getUsername());
-            cv.put(USER_PHOTO, CurrentUser.getInstance().getPhoto());
+            cv.put(USER_PHOTO, CurrentUser.getInstance().getPhoto()); // Get user photo from CurrentUser instance
             cv.put(DESCRIPTION, novo.getModelo());
             cv.put(FOTO, Post.bitmapToArray(bmp));
             resp = db.insert(TB_POST, null, cv);
@@ -92,6 +91,8 @@ public class MyBD extends SQLiteOpenHelper {
         }
         return resp;
     }
+
+
 
     // Register a new user in the database
     public void registerUser(String username, String password, Bitmap userPhoto) {
@@ -159,6 +160,8 @@ public class MyBD extends SQLiteOpenHelper {
             } while (cur.moveToNext());
             Log.d(TAG, "Loaded post list from database.");
         }
+        cur.close();
+        db.close();
         return lista;
     }
 }

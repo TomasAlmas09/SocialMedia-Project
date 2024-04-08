@@ -10,41 +10,37 @@ import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
 
 public class Post implements Parcelable {
-    // Tag for logging
     private static final String TAG = "Post";
 
-    // Fields
     private String title;
     private String modelo;
     private String username;
     private byte[] foto;
-    private byte[] userfoto;
+    private byte[] userPhoto;
 
-    // Constructor for Parcelable
     protected Post(Parcel in) {
         title = in.readString();
         modelo = in.readString();
         username = in.readString();
         foto = in.createByteArray();
-        userfoto = in.createByteArray();
+        userPhoto = in.createByteArray();
     }
 
-    // Method to write object data to Parcel
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(modelo);
         dest.writeString(username);
-        dest.writeByteArray(foto);
+        dest.writeByteArray(foto != null ? foto : new byte[0]);
+        dest.writeByteArray(userPhoto != null ? userPhoto : new byte[0]);
     }
 
-    // Method to describe contents (not used here)
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-    // Creator for Parcelable
     public static final Creator<Post> CREATOR = new Creator<Post>() {
         @Override
         public Post createFromParcel(Parcel in) {
@@ -57,7 +53,6 @@ public class Post implements Parcelable {
         }
     };
 
-    // Getters and Setters
     public String getTitle() {
         return title;
     }
@@ -82,6 +77,14 @@ public class Post implements Parcelable {
         this.foto = foto;
     }
 
+    public byte[] getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(byte[] userPhoto) {
+        this.userPhoto = userPhoto;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -90,7 +93,6 @@ public class Post implements Parcelable {
         this.username = username;
     }
 
-    // toString method
     @NonNull
     @Override
     public String toString() {
@@ -98,21 +100,34 @@ public class Post implements Parcelable {
     }
 
     // Constructor to accept Bitmap objects for photos
-    public Post(String title, String username, String description, Bitmap postPhoto, Bitmap bmp) {
+    public Post(String title, String username, String description, Bitmap postPhoto, Bitmap userPhoto) {
         this.title = title;
         this.username = username;
         this.modelo = description;
-        this.foto = bitmapToArray(postPhoto);
+
+        // Convert postPhoto to byte array if it's not null
+        if (postPhoto != null) {
+            this.foto = bitmapToArray(postPhoto);
+        } else {
+            this.foto = new byte[0]; // or handle the null case appropriately
+        }
+
+        // Convert userPhoto to byte array if it's not null
+        if (userPhoto != null) {
+            this.userPhoto = bitmapToArray(userPhoto);
+        } else {
+            this.userPhoto = new byte[0]; // or handle the null case appropriately
+        }
     }
 
-    // Method to convert Bitmap to byte array
+
+
     public static byte[] bitmapToArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
-    // Method to convert byte array to Bitmap
     public static Bitmap arrayToBitmap(byte[] foto) {
         return BitmapFactory.decodeByteArray(foto, 0, foto.length);
     }

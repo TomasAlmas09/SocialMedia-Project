@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -51,6 +49,7 @@ public class InsertPost extends AppCompatActivity {
                 // Log error message if setting image fails
                 Log.e(TAG, "Error setting image from onActivityResult: " + e.getMessage());
             }
+
         }
     }
 
@@ -66,11 +65,12 @@ public class InsertPost extends AppCompatActivity {
         editTitle = findViewById(R.id.edit_tittle_insert);
         editDesc = findViewById(R.id.edit_desc_insert);
         imgfoto = findViewById(R.id.img_foto_insert);
+        btinsert = findViewById(R.id.bt_insert_insert); // Initialize btinsert button
 
         // Get username and photo from CurrentUser
         CurrentUser currentUser = CurrentUser.getInstance();
         String username = currentUser.getUsername();
-        byte[] userPhoto = currentUser.getPhoto(); // Obtain user photo from CurrentUser
+        byte[] photo = currentUser.getPhoto();
 
         // Set click listener for selecting image
         imgfoto.setOnClickListener(new View.OnClickListener() {
@@ -86,27 +86,44 @@ public class InsertPost extends AppCompatActivity {
         });
 
         // Set click listener for inserting new post
-        btinsert = findViewById(R.id.bt_insert_insert);
         btinsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get title, description, and bitmap from views
                 String title = editTitle.getText().toString();
                 String desc = editDesc.getText().toString();
-                BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
-                Bitmap bmp = drw.getBitmap();
-                // Create a new Post object
-                Post novo = new Post(title, username, desc, bmp, bmp);
-                // Insert the post into the database
-                MyBD myBD = new MyBD(InsertPost.this, 2);
-                myBD.insertPost(novo, bmp);
-                // Reload the post list
-                App.loadList();
-                // Start MainActivity
-                Intent intent = new Intent(InsertPost.this, MainActivity.class);
-                startActivity(intent);
-                // Log the event
-                Log.d(TAG, "Inserted new post and finished activity.");
+
+                // Check if imgfoto is not null before accessing its drawable
+                if (imgfoto != null && imgfoto.getDrawable() != null) {
+                    BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
+                    Bitmap postBmp = drw.getBitmap();
+                    Bitmap userBmp = drw.getBitmap(); // Assuming the user photo is the same as the post photo
+
+                    // Convert Bitmaps to byte arrays
+                    byte[] postPhotoByteArray = Post.bitmapToArray(postBmp);
+                    byte[] userPhotoByteArray = Post.bitmapToArray(userBmp);
+
+                    // Create a new Post object
+                    Post novo = new Post(title, username, desc, postBmp, userBmp);
+
+                    // Insert the post into the database
+                    MyBD myBD = new MyBD(InsertPost.this, 2);
+                    myBD.insertPost(novo, postBmp);
+
+                    // Reload the post list
+                    App.loadList();
+
+                    // Start MainActivity
+                    Intent intent = new Intent(InsertPost.this, MainActivity.class);
+                    startActivity(intent);
+
+                    // Log the event
+                    Log.d(TAG, "Inserted new post and finished activity.");
+                } else {
+                    // Handle case where imgfoto is null or its drawable is null
+                    Log.e(TAG, "ImageView imgfoto is null or its drawable is null.");
+                    // You may want to show a message to the user or handle the situation differently
+                }
             }
         });
 
@@ -123,4 +140,5 @@ public class InsertPost extends AppCompatActivity {
             }
         });
     }
+
 }
