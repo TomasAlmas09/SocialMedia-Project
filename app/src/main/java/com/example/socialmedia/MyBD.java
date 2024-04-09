@@ -165,8 +165,9 @@ public class MyBD extends SQLiteOpenHelper {
     }
 
     public List<Post> carregaListaUser() {
-        List<Post> lista = new ArrayList<>();
+        List<Post> listaUser = new ArrayList<>();
         String username = CurrentUser.getInstance().getUsername();
+        Log.d(TAG, "Current username: " + username); // Log the current username
         if (username != null) {
             SQLiteDatabase db = getReadableDatabase();
             Cursor cur = null;
@@ -195,7 +196,7 @@ public class MyBD extends SQLiteOpenHelper {
                                     Post.arrayToBitmap(cur.getBlob(fotoIndex)),
                                     Post.arrayToBitmap(cur.getBlob(userPhotoIndex))
                             );
-                            lista.add(post);
+                            listaUser.add(post);
                         } else {
                             Log.e(TAG, "Column index not found.");
                         }
@@ -212,8 +213,10 @@ public class MyBD extends SQLiteOpenHelper {
         } else {
             Log.e(TAG, "Username is null.");
         }
-        return lista;
+        return listaUser;
     }
+
+
 
 
 

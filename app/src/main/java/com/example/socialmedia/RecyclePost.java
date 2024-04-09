@@ -20,11 +20,17 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
     private Context context;
     private List<Post> posts;
     private IOnSacaFoto listener;
+    private String username;
 
     // Constructor to initialize RecyclePost adapter with a list of posts
     public RecyclePost(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
+
+    }
+    // Method to set the username
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     // Interface to handle image selection

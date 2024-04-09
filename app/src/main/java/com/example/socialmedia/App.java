@@ -36,11 +36,16 @@ public class App extends Application {
     }
     public static void loadListUser() {
         if (ctx != null) {
-            MyBD myBD = new MyBD(ctx,2);
+            MyBD myBD = new MyBD(ctx, 2);
             user = myBD.carregaListaUser();
             Log.d(TAG, "List User loaded successfully.");
         } else {
-            Log.e(TAG, "Context is null. Unable to load list.");
+            String errorMessage = "Context is null. Unable to load list user.";
+            Log.e(TAG, errorMessage);
+            // You can add more details to the error message if needed
+            // For example, you can include the stack trace or the class name
+            Log.e(TAG, errorMessage, new NullPointerException("Context is null"));
         }
     }
+
 }
