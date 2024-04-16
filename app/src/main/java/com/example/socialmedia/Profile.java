@@ -25,7 +25,7 @@ import java.io.IOException;
 public class Profile extends AppCompatActivity {
 
     // Adapter for the RecyclerView
-    RecyclePost adpt;
+    RecycleUserPost adpt; // Alterado de RecyclePost para RecycleUserPost
     // Position of the selected post
     public int pos;
     public static final int CANALINSERT = 2;
@@ -92,11 +92,6 @@ public class Profile extends AppCompatActivity {
         }
     }
 
-
-
-
-
-
     private void initializeRecyclerView() {
         Log.e(TAG, "RecyclerView inicializada.");
 
@@ -116,7 +111,7 @@ public class Profile extends AppCompatActivity {
 
         Log.e(TAG, "Lista de posts não está vazia.");
 
-        adpt = new RecyclePost(Profile.this, App.user);
+        adpt = new RecycleUserPost(Profile.this, App.user); // Alterado de RecyclePost para RecycleUserPost
         if (adpt == null) {
             Log.e(TAG, "Adaptador não pôde ser inicializado.");
             return;
@@ -145,6 +140,21 @@ public class Profile extends AppCompatActivity {
             }
         } else {
             Log.e(TAG, "User list is empty.");
+        }
+
+        // Set the click listener for delete button
+        adpt.setOnItemClickListener(new RecycleUserPost.OnItemClickListener() { // Alterado de RecyclePost.OnItemClickListener para RecycleUserPost.OnItemClickListener
+            @Override
+            public void onDeleteClick(int position) {
+                deletePost(position);
+            }
+        });
+    }
+
+    private void deletePost(int position) {
+        if (App.user != null && position >= 0 && position < App.user.size()) {
+            App.user.remove(position);
+            adpt.notifyItemRemoved(position);
         }
     }
 
