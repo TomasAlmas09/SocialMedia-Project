@@ -1,6 +1,6 @@
 package com.example.socialmedia;
 
-import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,37 +16,29 @@ import java.util.List;
 public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHolder> {
     private static final String TAG = "RecyclePost"; // Tag for logging
 
-    private Context context;
     private List<Post> posts;
     private OnItemClickListener listener; // Change type to OnItemClickListener
-    private String username;
 
     // Constructor to initialize RecyclePost adapter with a list of posts
-    public RecycleUserPost(Context context, List<Post> posts) {
-        this.context = context;
+    public RecycleUserPost(List<Post> posts) {
         this.posts = posts;
-    }
-
-    // Method to set the username
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     // ViewHolder class to hold the views
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView editId;
         TextView editModelo, editUser;
-        ImageView imgFoto, imgUser;
-        Button btnDelete;
-        Button btnUpdate;
+        ImageView imgFoto;
+        Button btnDelete, btnUpdate;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             editId = itemView.findViewById(R.id.edit_idcar_itempost);
             editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
-            imgFoto = itemView.findViewById(R.id.img_foto_itempost);
             editUser = itemView.findViewById(R.id.edit_username);
+            imgFoto = itemView.findViewById(R.id.img_foto_itempost);
             btnDelete = itemView.findViewById(R.id.bt_delete_item); // Assuming the delete button ID is btnDelete
+            btnUpdate = itemView.findViewById(R.id.bt_update); // Assuming the update button ID is btnUpdate
         }
     }
 
@@ -78,12 +70,22 @@ public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHo
             holder.imgFoto.setImageBitmap(null);
         }
 
-        // Delete post when the button is clicked
+        // Delete post when the delete button is clicked
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
                     listener.onDeleteClick(position);
+                }
+            }
+        });
+
+        // Update post when the update button is clicked
+        holder.btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onUpdateClick(position);
                 }
             }
         });
@@ -95,6 +97,7 @@ public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHo
 
     public interface OnItemClickListener {
         void onDeleteClick(int position);
+        void onUpdateClick(int position);
     }
 
     // Return the number of posts
@@ -103,5 +106,3 @@ public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHo
         return posts.size();
     }
 }
-
-

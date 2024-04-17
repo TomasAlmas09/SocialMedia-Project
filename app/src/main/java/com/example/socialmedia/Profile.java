@@ -93,35 +93,35 @@ public class Profile extends AppCompatActivity {
     }
 
     private void initializeRecyclerView() {
-        Log.e(TAG, "RecyclerView inicializada.");
+        Log.e(TAG, "RecyclerView initialized.");
 
         // Initialize RecyclerView and adapter
         recyclerView = findViewById(R.id.recycle_post_profile);
         if (recyclerView == null) {
-            Log.e(TAG, "RecyclerView não encontrada no layout.");
+            Log.e(TAG, "RecyclerView not found in the layout.");
             return;
         }
 
-        Log.e(TAG, "RecyclerView encontrada.");
+        Log.e(TAG, "RecyclerView found.");
 
         if (App.user == null || App.user.isEmpty()) {
-            Log.e(TAG, "Lista de posts vazia ou nula.");
+            Log.e(TAG, "List of posts is empty or null.");
             return;
         }
 
-        Log.e(TAG, "Lista de posts não está vazia.");
+        Log.e(TAG, "List of posts is not empty.");
 
-        adpt = new RecycleUserPost(Profile.this, App.user); // Alterado de RecyclePost para RecycleUserPost
+        adpt = new RecycleUserPost(App.user); // Use only the list of posts as argument
         if (adpt == null) {
-            Log.e(TAG, "Adaptador não pôde ser inicializado.");
+            Log.e(TAG, "Adapter could not be initialized.");
             return;
         }
 
-        Log.e(TAG, "Adaptador inicializado com sucesso.");
+        Log.e(TAG, "Adapter initialized successfully.");
 
         recyclerView.setAdapter(adpt);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        Log.e(TAG, "LayoutManager configurado para RecyclerView.");
+        Log.e(TAG, "LayoutManager configured for RecyclerView.");
 
         // Set the user photo to ImageView
         if (!App.user.isEmpty()) {
@@ -142,20 +142,39 @@ public class Profile extends AppCompatActivity {
             Log.e(TAG, "User list is empty.");
         }
 
+
         // Set the click listener for delete button
-        adpt.setOnItemClickListener(new RecycleUserPost.OnItemClickListener() { // Alterado de RecyclePost.OnItemClickListener para RecycleUserPost.OnItemClickListener
+        adpt.setOnItemClickListener(new RecycleUserPost.OnItemClickListener() {
             @Override
             public void onDeleteClick(int position) {
                 deletePost(position);
             }
-        });
-    }
 
+            @Override
+            public void onUpdateClick(int position) {
+                // Redirect to the Update activity and pass the item position as an extra
+                Intent intent = new Intent(Profile.this, Update.class);
+                intent.putExtra("itemPosition", position);
+                startActivity(intent);
+            }
+        });
+        }
+
+
+
+
+
+    // Delete a post from the list and database
     private void deletePost(int position) {
         if (App.user != null && position >= 0 && position < App.user.size()) {
+            String title = App.user.get(position).getTitle();
             App.user.remove(position);
             adpt.notifyItemRemoved(position);
+            MyBD myBD = new MyBD(this, 2); // Use the appropriate version here
+            myBD.deletePost(title); // Call deletePost to remove from the database
         }
     }
+
+
 
 }

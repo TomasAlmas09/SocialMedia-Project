@@ -89,7 +89,7 @@
                 android:backgroundTint="@color/black"
                 ></Button>
             <Button
-                android:id="@+id/bt_update_item"
+                android:id="@+id/bt_update"
                 android:text="Update"
                 android:layout_weight="1"
                 android:layout_margin="5dp"

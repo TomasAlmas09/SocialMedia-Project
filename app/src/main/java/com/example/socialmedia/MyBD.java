@@ -164,6 +164,46 @@ public class MyBD extends SQLiteOpenHelper {
         return lista;
     }
 
+    // Método para atualizar uma postagem na tabela TB_POST
+    public int atualizarPost(String tituloAtualizado, String descricaoAtualizada, int posicao) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put(TITLE, tituloAtualizado);
+        valores.put(DESCRIPTION, descricaoAtualizada);
+        String[] whereArgs = { String.valueOf(posicao) };
+        int linhasAfetadas = db.update(TB_POST, valores, TITLE + " = ?", whereArgs);
+        db.close();
+        return linhasAfetadas;
+    }
+
+
+    // Delete a post from the database
+    public void deletePost(String title) {
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            db.beginTransaction();
+            // Define a condition for deletion
+            String whereClause = TITLE + " = ?";
+            String[] whereArgs = {title};
+            // Delete the post
+            int deletedRows = db.delete(TB_POST, whereClause, whereArgs);
+            db.setTransactionSuccessful();
+            if (deletedRows > 0) {
+                Log.d(TAG, "Deleted post from database: " + title);
+            } else {
+                Log.d(TAG, "No post found with title: " + title);
+            }
+        } catch (SQLException e) {
+            Log.e(TAG, "Error deleting post from database: " + e.getMessage());
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+
+
+
     public List<Post> carregaListaUser() {
         List<Post> listaUser = new ArrayList<>();
         String username = CurrentUser.getInstance().getUsername();
@@ -214,6 +254,8 @@ public class MyBD extends SQLiteOpenHelper {
             Log.e(TAG, "Username is null.");
         }
         return listaUser;
+
+
     }
 
 
