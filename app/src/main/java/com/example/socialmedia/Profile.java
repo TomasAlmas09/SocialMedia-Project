@@ -25,7 +25,7 @@ import java.io.IOException;
 public class Profile extends AppCompatActivity {
 
     // Adapter for the RecyclerView
-    RecycleUserPost adpt; // Alterado de RecyclePost para RecycleUserPost
+    RecycleUserPost adpt;
     // Position of the selected post
     public int pos;
     public static final int CANALINSERT = 2;
@@ -38,7 +38,13 @@ public class Profile extends AppCompatActivity {
     private static final String TAG = "Profile";
     // Instantiate BottomBar
     BottomBar bottomBar;
-    // ViewHolder class to hold the views
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Load user posts every time the activity is resumed
+        loadUserPosts();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,7 @@ public class Profile extends AppCompatActivity {
         bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
 
         // Get the username from CurrentUser and set it to edit_username TextView
-        TextView editUsername = findViewById(R.id.edit_username); // Alterado de EditText para TextView
+        TextView editUsername = findViewById(R.id.edit_username);
         String username = CurrentUser.getInstance().getUsername();
 
         // Check if the username is null or empty
@@ -155,18 +161,16 @@ public class Profile extends AppCompatActivity {
                 // Redirect to the Update activity and pass the item position as an extra
                 Intent intent = new Intent(Profile.this, Update.class);
                 intent.putExtra("itemPosition", position);
+                Log.e(TAG, "Position: " + position);
                 startActivity(intent);
             }
         });
-        }
-
-
-
-
+    }
 
     // Delete a post from the list and database
     private void deletePost(int position) {
         if (App.user != null && position >= 0 && position < App.user.size()) {
+            Log.e(TAG, "Position: " + position);
             String title = App.user.get(position).getTitle();
             App.user.remove(position);
             adpt.notifyItemRemoved(position);
@@ -174,7 +178,4 @@ public class Profile extends AppCompatActivity {
             myBD.deletePost(title); // Call deletePost to remove from the database
         }
     }
-
-
-
 }

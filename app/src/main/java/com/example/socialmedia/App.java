@@ -27,13 +27,15 @@ public class App extends Application {
 
     public static void loadList() {
         if (ctx != null) {
-            MyBD myBD = new MyBD(ctx,2);
+            MyBD myBD = new MyBD(ctx, 2);
             stand = myBD.carregaLista();
-            Log.d(TAG, "List loaded successfully.");
+            user = myBD.carregaListaUser();
+            Log.d(TAG, "Lists loaded successfully.");
         } else {
-            Log.e(TAG, "Context is null. Unable to load list.");
+            Log.e(TAG, "Context is null. Unable to load lists.");
         }
     }
+
     public static void loadListUser() {
         if (ctx != null) {
             MyBD myBD = new MyBD(ctx, 2);

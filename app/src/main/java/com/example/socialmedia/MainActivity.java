@@ -35,12 +35,22 @@ public class MainActivity extends AppCompatActivity {
     BottomBar bottomBar;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // Load user posts every time the activity is resumed
+        App.loadList();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Set up BottomBar
         bottomBar = new BottomBar();
         bottomBar.setupBottomBar(this); // Pass context to set up BottomBar
+
+        // Load the lists of posts
+        App.loadList();
 
         // Initialize RecyclerView and adapter
         recyclerView = findViewById(R.id.recycle_post_main);
@@ -59,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adpt);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

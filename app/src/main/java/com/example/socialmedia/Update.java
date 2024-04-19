@@ -28,7 +28,6 @@ public class Update extends AppCompatActivity {
         // Receive the position of the item to be updated from the previous activity
         itemPosition = getIntent().getIntExtra("itemPosition", -1);
 
-        // Set OnClickListener for the Update Button
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,35 +35,38 @@ public class Update extends AppCompatActivity {
                 String updatedTitle = editTitle.getText().toString();
                 String updatedDescription = editDescription.getText().toString();
 
-                // Verifica se o título foi inserido
+                // Check if title is provided
                 if (updatedTitle.isEmpty()) {
                     editTitle.setError("Insira um título");
                     return;
                 }
 
-                // Verifica se a descrição foi inserida
+                // Check if description is provided
                 if (updatedDescription.isEmpty()) {
                     editDescription.setError("Insira uma descrição");
                     return;
                 }
 
-                // Atualiza os dados na base de dados
-                MyBD myBD = new MyBD(Update.this, 2); // Passa o contexto e a versão do banco de dados
-                int linhasAfetadas = myBD.atualizarPost(updatedTitle, updatedDescription, itemPosition);
+                // Get the original title of the post
+                String originalTitle = App.user.get(itemPosition).getTitle();
 
-                if (linhasAfetadas > 0) {
-                    // Se a atualização foi bem-sucedida, mostra uma mensagem Toast
+                // Update data in the database
+                MyBD myBD = new MyBD(Update.this, 2); // Pass the context and database version
+                int rowsAffected = myBD.atualizarPost(updatedTitle, updatedDescription, originalTitle);
+
+                if (rowsAffected > 0) {
+                    // If update was successful, show a Toast message
                     Toast.makeText(Update.this, "Item at position " + itemPosition + " updated successfully!", Toast.LENGTH_SHORT).show();
                     Log.d("UpdateActivity", "Item at position " + itemPosition + " updated successfully!");
                 } else {
-                    // Caso contrário, mostra uma mensagem de erro
+                    // Otherwise, show an error message
                     Toast.makeText(Update.this, "Failed to update item at position " + itemPosition, Toast.LENGTH_SHORT).show();
                     Log.e("UpdateActivity", "Failed to update item at position " + itemPosition);
                 }
 
-                // Fecha a atividade atual
+                // Close the current activity
                 finish();
             }
         });
     }
-}
+    }

@@ -102,6 +102,7 @@ public class MyBD extends SQLiteOpenHelper {
         values.put(USER_PHOTO, Post.bitmapToArray(userPhoto));
         db.insert(TB_USER, null, values);
         db.close();
+        Log.d(TAG, "Registered new user: " + username);
     }
 
     // Check if a username already exists in the database
@@ -165,16 +166,18 @@ public class MyBD extends SQLiteOpenHelper {
     }
 
     // Método para atualizar uma postagem na tabela TB_POST
-    public int atualizarPost(String tituloAtualizado, String descricaoAtualizada, int posicao) {
+    public int atualizarPost(String tituloAtualizado, String descricaoAtualizada, String tituloOriginal) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues valores = new ContentValues();
         valores.put(TITLE, tituloAtualizado);
         valores.put(DESCRIPTION, descricaoAtualizada);
-        String[] whereArgs = { String.valueOf(posicao) };
+        String[] whereArgs = { tituloOriginal };
         int linhasAfetadas = db.update(TB_POST, valores, TITLE + " = ?", whereArgs);
         db.close();
+        Log.d(TAG, "Updated post in database: " + tituloAtualizado);
         return linhasAfetadas;
     }
+
 
 
     // Delete a post from the database
@@ -200,9 +203,6 @@ public class MyBD extends SQLiteOpenHelper {
             db.close();
         }
     }
-
-
-
 
     public List<Post> carregaListaUser() {
         List<Post> listaUser = new ArrayList<>();
@@ -254,13 +254,5 @@ public class MyBD extends SQLiteOpenHelper {
             Log.e(TAG, "Username is null.");
         }
         return listaUser;
-
-
     }
-
-
-
-
-
-
 }
