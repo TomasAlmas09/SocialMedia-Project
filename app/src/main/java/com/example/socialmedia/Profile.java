@@ -148,7 +148,6 @@ public class Profile extends AppCompatActivity {
             Log.e(TAG, "User list is empty.");
         }
 
-
         // Set the click listener for delete button
         adpt.setOnItemClickListener(new RecycleUserPost.OnItemClickListener() {
             @Override

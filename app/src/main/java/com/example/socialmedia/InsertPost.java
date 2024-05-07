@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.IOException;
 
 // Activity for inserting a new post
@@ -65,11 +64,6 @@ public class InsertPost extends AppCompatActivity {
         editDesc = findViewById(R.id.edit_desc_insert);
         imgfoto = findViewById(R.id.img_foto_insert);
         btinsert = findViewById(R.id.bt_insert_insert); // Initialize btinsert button
-
-        // Get username and photo from CurrentUser
-        CurrentUser currentUser = CurrentUser.getInstance();
-        String username = currentUser.getUsername();
-        byte[] photo = currentUser.getPhoto();
 
         // Set click listener for selecting image
         imgfoto.setOnClickListener(new View.OnClickListener() {
@@ -125,11 +119,6 @@ public class InsertPost extends AppCompatActivity {
                 }
             }
         });
-
-
-
-
-
 
         // Set click listener for canceling post insertion
         btcancel = findViewById(R.id.bt_cancel_insert);

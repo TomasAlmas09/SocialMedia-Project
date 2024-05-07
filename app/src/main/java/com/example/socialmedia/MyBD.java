@@ -165,18 +165,20 @@ public class MyBD extends SQLiteOpenHelper {
         return lista;
     }
 
-    // Método para atualizar uma postagem na tabela TB_POST
-    public int atualizarPost(String tituloAtualizado, String descricaoAtualizada, String tituloOriginal) {
+    public int atualizarPost(String updatedTitle, String updatedDescription, String originalTitle, Bitmap updatedImage) {
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues valores = new ContentValues();
-        valores.put(TITLE, tituloAtualizado);
-        valores.put(DESCRIPTION, descricaoAtualizada);
-        String[] whereArgs = { tituloOriginal };
-        int linhasAfetadas = db.update(TB_POST, valores, TITLE + " = ?", whereArgs);
+        ContentValues values = new ContentValues();
+        values.put(TITLE, updatedTitle);
+        values.put(DESCRIPTION, updatedDescription);
+        values.put(FOTO, Post.bitmapToArray(updatedImage)); // Update the image
+        String whereClause = TITLE + " = ?";
+        String[] whereArgs = {originalTitle};
+        int rowsAffected = db.update(TB_POST, values, whereClause, whereArgs);
         db.close();
-        Log.d(TAG, "Updated post in database: " + tituloAtualizado);
-        return linhasAfetadas;
+        Log.d(TAG, "Updated post in database: " + updatedTitle);
+        return rowsAffected;
     }
+
 
 
 

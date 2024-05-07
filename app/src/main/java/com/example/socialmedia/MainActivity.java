@@ -5,17 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.io.IOException;
-import androidx.annotation.NonNull;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // Load user posts every time the activity is resumed
         App.loadList();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -91,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
                 App.stand.get(pos).setFoto(Post.bitmapToArray(bmp));
                 adpt.notifyDataSetChanged();
                 Log.d(TAG, "Selected image set to post and adapter notified.");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                Log.e(TAG, "Error setting image from onActivityResult: " + e.getMessage());
             }
         }
     }

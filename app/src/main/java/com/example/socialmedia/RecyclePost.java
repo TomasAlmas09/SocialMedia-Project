@@ -26,8 +26,8 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
     public RecyclePost(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
-
     }
+
     // Method to set the username
     public void setUsername(String username) {
         this.username = username;
@@ -48,6 +48,7 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Initialize views
             editId = itemView.findViewById(R.id.edit_idcar_itempost);
             editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
             imgFoto = itemView.findViewById(R.id.img_foto_itempost);
@@ -64,6 +65,7 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate the layout for each item in the RecyclerView
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.itempost, parent, false);
         return new ViewHolder(itemView);
     }
@@ -72,6 +74,7 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = posts.get(position);
+        // Set post data to the views
         holder.editId.setText(String.valueOf(post.getTitle()));
         holder.editModelo.setText(post.getModelo());
         holder.editUser.setText(post.getUsername());
@@ -83,6 +86,9 @@ public class RecyclePost extends RecyclerView.Adapter<RecyclePost.ViewHolder> {
             // Clear the image if there is no photo for this post
             holder.imgFoto.setImageBitmap(null);
         }
+
+        // Log the binding of data for debugging
+        Log.d(TAG, "Data bound for post at position: " + position);
     }
 
     // Return the number of posts

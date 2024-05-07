@@ -44,6 +44,7 @@ public class Register extends AppCompatActivity {
         imgfoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Start activity for selecting image from gallery
                 Intent itfoto = new Intent(Intent.ACTION_GET_CONTENT);
                 itfoto.setType("image/*");
                 startActivityForResult(itfoto, CANALFOTO);
@@ -67,6 +68,7 @@ public class Register extends AppCompatActivity {
         if (requestCode == CANALFOTO && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             try {
+                // Convert URI to bitmap and set it to the ImageView
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imgfoto.setImageBitmap(bmp);
                 Log.d(TAG, "Image set successfully from onActivityResult.");
@@ -88,6 +90,7 @@ public class Register extends AppCompatActivity {
             return;
         }
 
+        // Get the bitmap from ImageView
         BitmapDrawable drw = (BitmapDrawable) imgfoto.getDrawable();
         Bitmap bmp = drw.getBitmap();
 

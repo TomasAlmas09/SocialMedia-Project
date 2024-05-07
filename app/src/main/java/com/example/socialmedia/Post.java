@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -18,6 +19,7 @@ public class Post implements Parcelable {
     private byte[] foto;
     private byte[] userPhoto;
 
+    // Constructor for Parcelable
     protected Post(Parcel in) {
         title = in.readString();
         modelo = in.readString();
@@ -26,6 +28,7 @@ public class Post implements Parcelable {
         userPhoto = in.createByteArray();
     }
 
+    // Method to write object data to a Parcel
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
@@ -35,12 +38,13 @@ public class Post implements Parcelable {
         dest.writeByteArray(userPhoto != null ? userPhoto : new byte[0]);
     }
 
-
+    // Describe the kinds of special objects contained in this Parcelable instance
     @Override
     public int describeContents() {
         return 0;
     }
 
+    // Creator constant for Parcelable
     public static final Creator<Post> CREATOR = new Creator<Post>() {
         @Override
         public Post createFromParcel(Parcel in) {
@@ -53,6 +57,7 @@ public class Post implements Parcelable {
         }
     };
 
+    // Getters and setters for Post attributes
     public String getTitle() {
         return title;
     }
@@ -93,13 +98,14 @@ public class Post implements Parcelable {
         this.username = username;
     }
 
+    // Override toString for debugging or logging
     @NonNull
     @Override
     public String toString() {
         return String.format("%s %s", title, modelo);
     }
 
-    // Constructor to accept Bitmap objects for photos
+    // Constructor accepting Bitmap objects for photos
     public Post(String title, String username, String description, Bitmap postPhoto, Bitmap userPhoto) {
         this.title = title;
         this.username = username;
@@ -120,16 +126,14 @@ public class Post implements Parcelable {
         }
     }
 
-
-
-
-
+    // Method to convert Bitmap to byte array
     public static byte[] bitmapToArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
+    // Method to convert byte array to Bitmap
     public static Bitmap arrayToBitmap(byte[] foto) {
         return BitmapFactory.decodeByteArray(foto, 0, foto.length);
     }

@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHolder> {
-    private static final String TAG = "RecyclePost"; // Tag for logging
+    private static final String TAG = "RecycleUserPost"; // Update tag for logging
 
     private List<Post> posts;
     private OnItemClickListener listener; // Change type to OnItemClickListener
 
-    // Constructor to initialize RecyclePost adapter with a list of posts
+    // Constructor to initialize RecycleUserPost adapter with a list of posts
     public RecycleUserPost(List<Post> posts) {
         this.posts = posts;
     }
@@ -33,6 +33,7 @@ public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHo
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Initialize views
             editId = itemView.findViewById(R.id.edit_idcar_itempost);
             editModelo = itemView.findViewById(R.id.edit_modelo_itempost);
             editUser = itemView.findViewById(R.id.edit_username);
@@ -91,10 +92,12 @@ public class RecycleUserPost extends RecyclerView.Adapter<RecycleUserPost.ViewHo
         });
     }
 
+    // Method to set the click listener for item clicks
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
+    // Interface to handle item click events
     public interface OnItemClickListener {
         void onDeleteClick(int position);
         void onUpdateClick(int position);

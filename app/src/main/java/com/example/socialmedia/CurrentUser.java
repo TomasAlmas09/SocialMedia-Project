@@ -24,6 +24,8 @@ public class CurrentUser {
         // Create a new instance if it's not already initialized
         if (instance == null) {
             instance = new CurrentUser();
+            // Log creation of singleton instance
+            System.out.println("New instance of CurrentUser created.");
         }
         return instance;
     }
@@ -36,6 +38,8 @@ public class CurrentUser {
     // Method to set the username of the current user
     public void setUsername(String username) {
         this.username = username;
+        // Log username set
+        System.out.println("Username set to: " + username);
     }
 
     // Method to get the profile photo of the current user
@@ -46,6 +50,8 @@ public class CurrentUser {
     // Method to set the profile photo of the current user
     public void setPhoto(byte[] photo) {
         this.photo = photo;
+        // Log profile photo set
+        System.out.println("Profile photo set.");
     }
 
     // Method to check if the user is logged in
